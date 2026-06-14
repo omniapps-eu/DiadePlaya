@@ -2,6 +2,8 @@ import { z } from 'zod'
 import type {
   BeachConditions,
   ConditionSnapshot,
+  HourlyPoint,
+  TidePoint,
   Timeframe,
 } from '../types'
 import { analyzeTide } from '../lib/tides'
@@ -111,7 +113,10 @@ export async function getBeachConditions(
     tomorrow: tideFor(snapshots.tomorrow.time),
   }
 
-  return { fetchedAt: now, timezone: forecast.timezone, snapshots, tides }
+  const hourly = buildHourly(forecast, now, 10)
+  const tideSeries = buildTideSeries(marine, now, 25)
+
+  return { fetchedAt: now, timezone: forecast.timezone, snapshots, tides, hourly, tideSeries }
 }
 
 /** Snapshot del momento actual (usa los bloques `current`). */
@@ -147,6 +152,47 @@ function snapshotAt(f: Forecast, m: Marine, i: number): ConditionSnapshot {
     uvIndex: f.hourly.uv_index[i] ?? null,
     isDay: (f.hourly.is_day[i] ?? 1) === 1,
   }
+}
+
+/** Prevision hora a hora desde la hora actual (incluida). */
+function buildHourly(f: Forecast, nowIso: string, count: number): HourlyPoint[] {
+  const floor = `${nowIso.slice(0, 13)}:00` // "2026-06-14T09:15" -> "2026-06-14T09:00"
+  let start = f.hourly.time.indexOf(floor)
+  if (start < 0) {
+    const n = Date.parse(nowIso)
+    start = f.hourly.time.findIndex((t) => Date.parse(t) >= n)
+    if (start < 0) start = 0
+  }
+  const out: HourlyPoint[] = []
+  for (let k = 0; k < count && start + k < f.hourly.time.length; k++) {
+    const i = start + k
+    out.push({
+      time: f.hourly.time[i],
+      airTemp: f.hourly.temperature_2m[i] ?? 0,
+      weatherCode: f.hourly.weather_code[i] ?? 0,
+      isDay: (f.hourly.is_day[i] ?? 1) === 1,
+    })
+  }
+  return out
+}
+
+/** Serie de altura del mar desde la hora actual (incluida) para la curva de marea. */
+function buildTideSeries(m: Marine, nowIso: string, count: number): TidePoint[] {
+  const floor = `${nowIso.slice(0, 13)}:00`
+  let start = m.hourly.time.indexOf(floor)
+  if (start < 0) {
+    const n = Date.parse(nowIso)
+    start = m.hourly.time.findIndex((t) => Date.parse(t) >= n)
+    if (start < 0) start = 0
+  }
+  const out: TidePoint[] = []
+  for (let k = 0; k < count && start + k < m.hourly.time.length; k++) {
+    const i = start + k
+    const h = m.hourly.sea_level_height_msl[i]
+    if (h == null) continue
+    out.push({ time: m.hourly.time[i], height: h })
+  }
+  return out
 }
 
 /** Indice horario para `dayOffset` dias desde hoy a la hora `hour` local. */

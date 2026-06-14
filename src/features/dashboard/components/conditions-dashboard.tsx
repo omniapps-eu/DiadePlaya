@@ -31,7 +31,7 @@ export function ConditionsDashboard() {
     <Shell cloudy={cloudy}>
       <header className="space-y-3">
         <div className="flex items-center justify-between">
-          <h1 className="text-sm font-semibold uppercase tracking-widest text-white/80">
+          <h1 className="text-sm font-semibold uppercase tracking-widest text-white/90 drop-shadow">
             Mi día de Playa
           </h1>
           <BeachSearch />
@@ -43,10 +43,10 @@ export function ConditionsDashboard() {
         <EmptyState />
       ) : (
         <section className="space-y-4">
-          <div className="flex items-center gap-2 text-white">
+          <div className="flex items-center gap-2 text-white drop-shadow">
             <MapPin size={20} />
             <h2 className="text-2xl font-bold">{selectedBeach.name}</h2>
-            <span className="text-white/70">· {selectedBeach.region}</span>
+            <span className="text-white/80">· {selectedBeach.region}</span>
           </div>
 
           <TimeframeTabs value={timeframe} onChange={setTimeframe} />
@@ -54,7 +54,14 @@ export function ConditionsDashboard() {
           {loading && <p className="text-white/80">Cargando condiciones…</p>}
           {error && <p className="text-white/90">{error}</p>}
 
-          {snapshot && <ConditionGrid snapshot={snapshot} tide={data.tides[timeframe]} />}
+          {snapshot && (
+            <ConditionGrid
+              snapshot={snapshot}
+              tide={data.tides[timeframe]}
+              tideSeries={data.tideSeries}
+              hourly={data.hourly}
+            />
+          )}
         </section>
       )}
     </Shell>

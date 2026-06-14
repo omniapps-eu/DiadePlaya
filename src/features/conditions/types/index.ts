@@ -41,6 +41,20 @@ export interface TideInfo {
   level: number
 }
 
+/** Punto de la prevision hora a hora. */
+export interface HourlyPoint {
+  time: string
+  airTemp: number
+  weatherCode: number
+  isDay: boolean
+}
+
+/** Punto de la curva de marea (altura del mar en metros respecto al nivel medio). */
+export interface TidePoint {
+  time: string
+  height: number
+}
+
 /** Resultado completo para una playa. */
 export interface BeachConditions {
   fetchedAt: string
@@ -48,4 +62,8 @@ export interface BeachConditions {
   snapshots: Record<Timeframe, ConditionSnapshot>
   /** Marea calculada para cada franja temporal (cambia con el dia). */
   tides: Record<Timeframe, TideInfo>
+  /** Prevision de las proximas horas (desde la hora actual). */
+  hourly: HourlyPoint[]
+  /** Curva de marea de las proximas ~12 horas (desde la hora actual). */
+  tideSeries: TidePoint[]
 }

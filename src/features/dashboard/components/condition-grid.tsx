@@ -1,5 +1,10 @@
 import { Droplets, Thermometer } from 'lucide-react'
-import type { ConditionSnapshot, TideInfo } from '@/features/conditions/types'
+import type {
+  ConditionSnapshot,
+  HourlyPoint,
+  TideInfo,
+  TidePoint,
+} from '@/features/conditions/types'
 import { windCardinal } from '@/features/conditions/lib/weather-codes'
 import { round } from '@/features/conditions/lib/format'
 import { MetricCard } from './metric-card'
@@ -13,15 +18,19 @@ import { WindCompass } from './wind-compass'
 export function ConditionGrid({
   snapshot,
   tide,
+  tideSeries,
+  hourly,
 }: {
   snapshot: ConditionSnapshot
   tide?: TideInfo
+  tideSeries?: TidePoint[]
+  hourly?: HourlyPoint[]
 }) {
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-      <TideCard tide={tide} />
+      <TideCard tide={tide} series={tideSeries} />
 
-      <SkyCard snapshot={snapshot} />
+      <SkyCard snapshot={snapshot} hourly={hourly} />
 
       <TempCard
         label="Sensación"
