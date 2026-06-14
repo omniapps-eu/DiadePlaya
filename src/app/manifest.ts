@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Playa — condiciones de un vistazo',
-    short_name: 'Playa',
+    name: 'Mi día de Playa',
+    short_name: 'Mi Playa',
     description:
       'Marea, viento, temperatura del agua y del aire de tus playas favoritas, de un vistazo.',
     start_url: '/',

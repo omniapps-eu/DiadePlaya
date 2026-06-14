@@ -31,7 +31,9 @@ export function ConditionsDashboard() {
     <Shell cloudy={cloudy}>
       <header className="space-y-3">
         <div className="flex items-center justify-between">
-          <h1 className="text-sm font-semibold uppercase tracking-widest text-white/80">Playa</h1>
+          <h1 className="text-sm font-semibold uppercase tracking-widest text-white/80">
+            Mi día de Playa
+          </h1>
           <BeachSearch />
         </div>
         <FavoritesBar />

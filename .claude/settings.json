@@ -14,7 +14,10 @@
       "Bash(curl -s -o /dev/null -w \"icon-512: HTTP %{http_code}\\\\n\" http://localhost:3000/icon-512.png)",
       "Bash(curl -s http://localhost:3000/manifest.webmanifest)",
       "Bash(git init *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -q -m ' *)",
+      "Bash(node -e \"let s='';process.stdin.on\\('data',d=>s+=d\\).on\\('end',\\(\\)=>{const m=JSON.parse\\(s\\);console.log\\('name:',m.name,'| short_name:',m.short_name\\)}\\)\")",
+      "Bash(curl -s http://localhost:3000)"
     ]
   }
 }

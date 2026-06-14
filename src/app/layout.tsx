@@ -3,15 +3,15 @@ import './globals.css'
 import { RegisterServiceWorker } from '@/shared/components/register-service-worker'
 
 export const metadata: Metadata = {
-  title: 'Playa — condiciones de un vistazo',
+  title: 'Mi día de Playa — condiciones de un vistazo',
   description:
     'Marea, viento, temperatura del agua y del aire de tus playas favoritas, de un vistazo.',
   manifest: '/manifest.webmanifest',
-  applicationName: 'Playa',
+  applicationName: 'Mi día de Playa',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'Playa',
+    title: 'Mi día de Playa',
   },
   icons: {
     icon: [
