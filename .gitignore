@@ -60,6 +60,8 @@ Thumbs.db
 .claude/plugins
 *.mcp.json
 !example.mcp.json
+# Asset de la fabrica con secreto embebido — nunca versionar
+.claude/skills/video-visuals/assets/levy.png
 
 # Supabase
 supabase/.branches

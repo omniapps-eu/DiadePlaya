@@ -17,7 +17,12 @@
       "Bash(git add *)",
       "Bash(git commit -q -m ' *)",
       "Bash(node -e \"let s='';process.stdin.on\\('data',d=>s+=d\\).on\\('end',\\(\\)=>{const m=JSON.parse\\(s\\);console.log\\('name:',m.name,'| short_name:',m.short_name\\)}\\)\")",
-      "Bash(curl -s http://localhost:3000)"
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(git remote *)",
+      "Bash(git branch *)",
+      "Bash(git push *)",
+      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --force --index-filter \"git rm --cached --ignore-unmatch '.claude/skills/video-visuals/assets/levy.png'\" -- --all)",
+      "Bash(git stash *)"
     ]
   }
 }
