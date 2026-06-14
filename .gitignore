@@ -55,13 +55,16 @@ Thumbs.db
 .AppleDouble
 .LSOverride
 
-# Claude Code
-.claude/skills/**/node_modules
-.claude/plugins
+# SaaS Factory / Claude Code — tooling local, no forma parte de la app publicada
+/.claude/
+/CLAUDE.md
+/GEMINI.md
+/CHANGELOG.md
 *.mcp.json
 !example.mcp.json
-# Asset de la fabrica con secreto embebido — nunca versionar
-.claude/skills/video-visuals/assets/levy.png
+
+# TypeScript incremental build info
+/tsconfig.tsbuildinfo
 
 # Supabase
 supabase/.branches
