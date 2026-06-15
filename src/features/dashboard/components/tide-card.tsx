@@ -47,9 +47,19 @@ export function TideCard({ tide, series = [] }: { tide?: TideInfo; series?: Tide
           </span>
         </div>
 
+        {/* La próxima marea va a la izquierda: bajando → bajamar; subiendo → pleamar */}
         <div className="relative mt-auto grid grid-cols-2 gap-2 text-sm">
-          <TideRow label="Pleamar" time={tide.nextHigh?.time} />
-          <TideRow label="Bajamar" time={tide.nextLow?.time} />
+          {rising ? (
+            <>
+              <TideRow label="Pleamar" time={tide.nextHigh?.time} />
+              <TideRow label="Bajamar" time={tide.nextLow?.time} />
+            </>
+          ) : (
+            <>
+              <TideRow label="Bajamar" time={tide.nextLow?.time} />
+              <TideRow label="Pleamar" time={tide.nextHigh?.time} />
+            </>
+          )}
         </div>
       </button>
 
