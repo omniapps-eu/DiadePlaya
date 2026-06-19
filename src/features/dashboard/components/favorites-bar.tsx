@@ -19,7 +19,7 @@ export function FavoritesBar() {
           <span
             key={beach.id}
             className={`group flex items-center gap-1 rounded-full px-3 py-2 text-sm font-semibold backdrop-blur-md transition ${
-              active ? 'bg-white text-sky-700 shadow' : 'bg-white/25 text-white hover:bg-white/35'
+              active ? 'bg-white text-sky-700 shadow' : 'bg-white/25 text-[var(--gm-fg)] hover:bg-white/35'
             }`}
           >
             <button onClick={() => select(beach.id)}>{beach.name}</button>

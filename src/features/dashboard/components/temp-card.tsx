@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { airTempColor, waterTempColor } from '@/features/conditions/lib/colors'
+import { round } from '@/features/conditions/lib/format'
 
 interface TempCardProps {
   label: string
@@ -9,10 +10,12 @@ interface TempCardProps {
   value: ReactNode
   sub?: ReactNode
   icon?: ReactNode
+  /** Temperatura máxima del día (solo para la tarjeta de aire). */
+  maxTemp?: number | null
 }
 
 /** Tarjeta de temperatura que se tiñe segun el valor (frio→calor). */
-export function TempCard({ label, temp, scale, value, sub, icon }: TempCardProps) {
+export function TempCard({ label, temp, scale, value, sub, icon, maxTemp }: TempCardProps) {
   const color = temp == null ? '#94a3b8' : scale === 'water' ? waterTempColor(temp) : airTempColor(temp)
 
   return (
@@ -30,12 +33,21 @@ export function TempCard({ label, temp, scale, value, sub, icon }: TempCardProps
         aria-hidden
       />
 
-      <div className="relative flex items-center justify-between text-white/90">
+      <div className="relative flex items-center justify-between text-[var(--gm-fg-muted)]">
         <span className="text-xs font-medium uppercase tracking-wide">{label}</span>
         {icon}
       </div>
-      <div className="relative text-2xl font-bold text-white drop-shadow">{value}</div>
-      {sub && <div className="relative text-sm text-white/90">{sub}</div>}
+
+      <div className="relative flex items-baseline gap-2">
+        <span className="text-2xl font-bold text-[var(--gm-fg)]">{value}</span>
+        {maxTemp != null && (
+          <span className="text-sm font-medium text-[var(--gm-fg-muted)]">
+            máx {round(maxTemp, '°')}
+          </span>
+        )}
+      </div>
+
+      {sub && <div className="relative text-sm text-[var(--gm-fg-muted)]">{sub}</div>}
     </div>
   )
 }

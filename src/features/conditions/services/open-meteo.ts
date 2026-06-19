@@ -42,6 +42,10 @@ const forecastSchema = z.object({
     uv_index: numArray,
     is_day: numArray,
   }),
+  daily: z.object({
+    time: z.array(z.string()),
+    temperature_2m_max: numArray,
+  }),
 })
 
 const marineSchema = z.object({
@@ -77,7 +81,8 @@ export async function getBeachConditions(
       'temperature_2m,apparent_temperature,cloud_cover,wind_speed_10m,wind_direction_10m,weather_code,uv_index,is_day',
     hourly:
       'temperature_2m,apparent_temperature,cloud_cover,wind_speed_10m,wind_direction_10m,weather_code,uv_index,is_day',
-    forecast_days: '2',
+    daily: 'temperature_2m_max',
+    forecast_days: '3',
     timezone: 'auto',
   })
   const mParams = new URLSearchParams({
@@ -98,10 +103,13 @@ export async function getBeachConditions(
   const marine = marineSchema.parse(mRaw)
 
   const now = forecast.current.time
+  const [i0, i1, i2] = nextSlotIndices(forecast.hourly.time, now)
+  const maxFor = (dateIso: string) => dailyMaxFor(forecast.daily, dateIso)
   const snapshots: Record<Timeframe, ConditionSnapshot> = {
-    now: currentSnapshot(forecast, marine),
-    afternoon: snapshotAt(forecast, marine, hourIndexFor(forecast.hourly.time, now, 0, 17)),
-    tomorrow: snapshotAt(forecast, marine, hourIndexFor(forecast.hourly.time, now, 1, 13)),
+    now: currentSnapshot(forecast, marine, maxFor(now)),
+    slot0: snapshotAt(forecast, marine, i0, maxFor(forecast.hourly.time[i0])),
+    slot1: snapshotAt(forecast, marine, i1, maxFor(forecast.hourly.time[i1])),
+    slot2: snapshotAt(forecast, marine, i2, maxFor(forecast.hourly.time[i2])),
   }
 
   // La marea se calcula respecto al momento de cada franja: cambia con el dia.
@@ -109,8 +117,9 @@ export async function getBeachConditions(
     analyzeTide(marine.hourly.time, marine.hourly.sea_level_height_msl, ref)
   const tides: Record<Timeframe, ReturnType<typeof tideFor>> = {
     now: tideFor(now),
-    afternoon: tideFor(snapshots.afternoon.time),
-    tomorrow: tideFor(snapshots.tomorrow.time),
+    slot0: tideFor(snapshots.slot0.time),
+    slot1: tideFor(snapshots.slot1.time),
+    slot2: tideFor(snapshots.slot2.time),
   }
 
   const hourly = buildHourly(forecast, now, 10)
@@ -119,8 +128,18 @@ export async function getBeachConditions(
   return { fetchedAt: now, timezone: forecast.timezone, snapshots, tides, hourly, tideSeries }
 }
 
+/** Temperatura máxima diaria para la fecha de un snapshot. */
+function dailyMaxFor(
+  daily: { time: string[]; temperature_2m_max: (number | null)[] },
+  snapshotIso: string,
+): number | null {
+  const date = snapshotIso.slice(0, 10)
+  const idx = daily.time.indexOf(date)
+  return idx >= 0 ? (daily.temperature_2m_max[idx] ?? null) : null
+}
+
 /** Snapshot del momento actual (usa los bloques `current`). */
-function currentSnapshot(f: Forecast, m: Marine): ConditionSnapshot {
+function currentSnapshot(f: Forecast, m: Marine, maxAirTemp: number | null): ConditionSnapshot {
   return {
     time: f.current.time,
     airTemp: f.current.temperature_2m,
@@ -133,11 +152,12 @@ function currentSnapshot(f: Forecast, m: Marine): ConditionSnapshot {
     waveHeight: m.current.wave_height,
     uvIndex: f.current.uv_index,
     isDay: f.current.is_day === 1,
+    maxAirTemp,
   }
 }
 
 /** Snapshot en un indice horario concreto. */
-function snapshotAt(f: Forecast, m: Marine, i: number): ConditionSnapshot {
+function snapshotAt(f: Forecast, m: Marine, i: number, maxAirTemp: number | null): ConditionSnapshot {
   const mi = matchMarineIndex(m.hourly.time, f.hourly.time[i])
   return {
     time: f.hourly.time[i],
@@ -151,6 +171,7 @@ function snapshotAt(f: Forecast, m: Marine, i: number): ConditionSnapshot {
     waveHeight: m.hourly.wave_height[mi] ?? null,
     uvIndex: f.hourly.uv_index[i] ?? null,
     isDay: (f.hourly.is_day[i] ?? 1) === 1,
+    maxAirTemp,
   }
 }
 
@@ -193,6 +214,40 @@ function buildTideSeries(m: Marine, nowIso: string, count: number): TidePoint[] 
     out.push({ time: m.hourly.time[i], height: h })
   }
   return out
+}
+
+/**
+ * Devuelve los índices de los próximos 3 francos futuros del ciclo [12h, 17h]
+ * contando desde nowIso. Las horas y fechas se comparan como cadenas ISO locales
+ * (sin sufijo Z) para coincidir con el formato de Open-Meteo.
+ */
+function nextSlotIndices(times: string[], nowIso: string): [number, number, number] {
+  const HOURS = [12, 17]
+  const results: number[] = []
+
+  for (let dayOff = 0; dayOff <= 2 && results.length < 3; dayOff++) {
+    const d = new Date(`${nowIso.slice(0, 10)}T00:00:00`)
+    d.setDate(d.getDate() + dayOff)
+    const dateStr = [
+      d.getFullYear(),
+      String(d.getMonth() + 1).padStart(2, '0'),
+      String(d.getDate()).padStart(2, '0'),
+    ].join('-')
+
+    for (const hour of HOURS) {
+      if (results.length >= 3) break
+      const target = `${dateStr}T${String(hour).padStart(2, '0')}:00`
+      // Comparación lexicográfica válida para strings ISO del mismo formato/zona
+      if (target > nowIso) {
+        const idx = times.indexOf(target)
+        if (idx >= 0) results.push(idx)
+      }
+    }
+  }
+
+  // Fallback: rellenar con el último encontrado si hay menos de 3
+  while (results.length < 3) results.push(results[results.length - 1] ?? 0)
+  return [results[0], results[1], results[2]]
 }
 
 /** Indice horario para `dayOffset` dias desde hoy a la hora `hour` local. */

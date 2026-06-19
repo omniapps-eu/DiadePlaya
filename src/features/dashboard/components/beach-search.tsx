@@ -27,7 +27,7 @@ export function BeachSearch() {
       <button
         onClick={() => setOpen(true)}
         aria-label="Buscar playa"
-        className="flex h-11 w-11 items-center justify-center rounded-full bg-white/25 text-white backdrop-blur-md transition hover:bg-white/40"
+        className="flex h-11 w-11 items-center justify-center rounded-full bg-white/25 text-[var(--gm-fg)] backdrop-blur-md transition hover:bg-white/40"
       >
         <Search size={20} />
       </button>

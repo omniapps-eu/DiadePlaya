@@ -75,13 +75,13 @@ export function SkyCard({
         />
         <SkyScene category={cat} night={night} />
         <div className="relative min-w-0 flex-1">
-          <div className="text-xs font-medium uppercase tracking-wide text-white/90">Cielo</div>
-          <div className="text-xl font-bold leading-tight text-white drop-shadow sm:text-2xl">
+          <div className="text-xs font-medium uppercase tracking-wide text-[var(--gm-fg-muted)]">Cielo</div>
+          <div className="text-xl font-bold leading-tight text-[var(--gm-fg)] sm:text-2xl">
             {info.label}
           </div>
-          <div className="text-sm text-white/90">{round(snapshot.cloudCover, '%')} de nubes</div>
+          <div className="text-sm text-[var(--gm-fg-muted)]">{round(snapshot.cloudCover, '%')} de nubes</div>
         </div>
-        <span className="relative flex shrink-0 items-center gap-1 text-sm font-medium text-white/90">
+        <span className="relative flex shrink-0 items-center gap-1 text-sm font-medium text-[var(--gm-fg-muted)]">
           Por horas <ChevronRight size={16} />
         </span>
       </button>

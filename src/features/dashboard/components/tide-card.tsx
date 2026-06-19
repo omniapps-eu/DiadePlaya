@@ -34,15 +34,15 @@ export function TideCard({ tide, series = [] }: { tide?: TideInfo; series?: Tide
         </div>
 
         {/* Contenido */}
-        <div className="relative flex items-center justify-between text-white/90">
+        <div className="relative flex items-center justify-between text-[var(--gm-fg-muted)]">
           <span className="text-xs font-medium uppercase tracking-wide">Marea</span>
           <Waves size={18} />
         </div>
 
-        <div className="relative flex items-center gap-2 text-white">
+        <div className="relative flex items-center gap-2 text-[var(--gm-fg)]">
           {rising ? <ArrowUpRight size={28} /> : <ArrowDownRight size={28} />}
-          <span className="text-2xl font-bold drop-shadow">{rising ? 'Subiendo' : 'Bajando'}</span>
-          <span className="ml-auto flex items-center gap-1 text-sm font-medium text-white/90 drop-shadow">
+          <span className="text-2xl font-bold">{rising ? 'Subiendo' : 'Bajando'}</span>
+          <span className="ml-auto flex items-center gap-1 text-sm font-medium text-[var(--gm-fg-muted)]">
             {pct}% <ChevronRight size={16} />
           </span>
         </div>
@@ -96,8 +96,8 @@ function TideModal({ series, onClose }: { series: TidePoint[]; onClose: () => vo
 function TideRow({ label, time }: { label: string; time?: string }) {
   return (
     <div className="rounded-xl bg-white/25 px-3 py-2 backdrop-blur-sm">
-      <div className="text-xs text-white/80">{label}</div>
-      <div className="font-semibold text-white drop-shadow">{time ? formatHour(time) : '—'}</div>
+      <div className="text-xs text-[var(--gm-fg-faint)]">{label}</div>
+      <div className="font-semibold text-[var(--gm-fg)]">{time ? formatHour(time) : '—'}</div>
     </div>
   )
 }

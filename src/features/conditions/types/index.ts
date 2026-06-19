@@ -3,13 +3,7 @@
  * Las condiciones provienen de Open-Meteo (Forecast + Marine APIs).
  */
 
-export type Timeframe = 'now' | 'afternoon' | 'tomorrow'
-
-export const TIMEFRAMES: { id: Timeframe; label: string }[] = [
-  { id: 'now', label: 'Ahora' },
-  { id: 'afternoon', label: 'Esta tarde' },
-  { id: 'tomorrow', label: 'Mañana' },
-]
+export type Timeframe = 'now' | 'slot0' | 'slot1' | 'slot2'
 
 /** Snapshot de condiciones en un instante concreto. */
 export interface ConditionSnapshot {
@@ -24,6 +18,8 @@ export interface ConditionSnapshot {
   waveHeight: number | null
   uvIndex: number | null
   isDay: boolean
+  /** Temperatura máxima del día (para la etiqueta "máx X°"). */
+  maxAirTemp: number | null
 }
 
 /** Un extremo de marea (pleamar o bajamar). */

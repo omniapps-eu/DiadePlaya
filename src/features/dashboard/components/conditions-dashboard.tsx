@@ -31,7 +31,7 @@ export function ConditionsDashboard() {
     <Shell cloudy={cloudy}>
       <header className="space-y-3">
         <div className="flex items-center justify-between">
-          <h1 className="text-sm font-semibold uppercase tracking-widest text-white/90 drop-shadow">
+          <h1 className="text-sm font-semibold uppercase tracking-widest text-[var(--gm-fg-muted)]">
             Mi día de Playa
           </h1>
           <BeachSearch />
@@ -43,16 +43,25 @@ export function ConditionsDashboard() {
         <EmptyState />
       ) : (
         <section className="space-y-4">
-          <div className="flex items-center gap-2 text-white drop-shadow">
+          <div className="flex items-center gap-2 text-[var(--gm-fg)]">
             <MapPin size={20} />
             <h2 className="text-2xl font-bold">{selectedBeach.name}</h2>
-            <span className="text-white/80">· {selectedBeach.region}</span>
+            <span className="text-[var(--gm-fg-faint)]">· {selectedBeach.region}</span>
           </div>
 
-          <TimeframeTabs value={timeframe} onChange={setTimeframe} />
+          <TimeframeTabs
+            value={timeframe}
+            onChange={setTimeframe}
+            slotTimes={
+              data
+                ? [data.snapshots.slot0.time, data.snapshots.slot1.time, data.snapshots.slot2.time]
+                : undefined
+            }
+            fetchedAt={data?.fetchedAt}
+          />
 
-          {loading && <p className="text-white/80">Cargando condiciones…</p>}
-          {error && <p className="text-white/90">{error}</p>}
+          {loading && <p className="text-[var(--gm-fg-faint)]">Cargando condiciones…</p>}
+          {error && <p className="text-[var(--gm-fg-muted)]">{error}</p>}
 
           {snapshot && (
             <ConditionGrid
@@ -72,8 +81,8 @@ function EmptyState() {
   return (
     <div className="gm-card mt-6 flex flex-col items-center gap-3 p-8 text-center">
       <span className="text-5xl">🏖️</span>
-      <h2 className="text-xl font-bold text-white">Añade tu primera playa</h2>
-      <p className="max-w-xs text-white/85">
+      <h2 className="text-xl font-bold text-[var(--gm-fg)]">Añade tu primera playa</h2>
+      <p className="max-w-xs text-[var(--gm-fg-muted)]">
         Guarda tus playas favoritas y mira todas sus condiciones de un vistazo: marea, viento,
         temperatura del agua y más.
       </p>

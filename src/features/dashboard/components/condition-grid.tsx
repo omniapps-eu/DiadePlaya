@@ -42,12 +42,13 @@ export function ConditionGrid({
       />
 
       <TempCard
-        label="Aire"
+        label="Temperatura"
         temp={snapshot.airTemp}
         scale="air"
         value={round(snapshot.airTemp, '°')}
-        sub="Temperatura"
+        sub="Aire"
         icon={<Thermometer size={18} />}
+        maxTemp={snapshot.maxAirTemp}
       />
 
       <TempCard

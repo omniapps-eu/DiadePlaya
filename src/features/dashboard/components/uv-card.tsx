@@ -6,12 +6,12 @@ export function UvCard({ uv }: { uv: number | null }) {
   if (uv == null) {
     return (
       <div className="gm-card flex flex-col gap-1 p-4">
-        <div className="flex items-center justify-between text-white/90">
+        <div className="flex items-center justify-between text-[var(--gm-fg-muted)]">
           <span className="text-xs font-medium uppercase tracking-wide">Índice UV</span>
           <Sun size={18} />
         </div>
-        <div className="text-2xl font-bold text-white">—</div>
-        <div className="text-sm text-white/90">No disponible</div>
+        <div className="text-2xl font-bold text-[var(--gm-fg)]">—</div>
+        <div className="text-sm text-[var(--gm-fg-muted)]">No disponible</div>
       </div>
     )
   }
@@ -30,14 +30,14 @@ export function UvCard({ uv }: { uv: number | null }) {
         aria-hidden
       />
 
-      <div className="relative flex items-center justify-between text-white/90">
+      <div className="relative flex items-center justify-between text-[var(--gm-fg-muted)]">
         <span className="text-xs font-medium uppercase tracking-wide">Índice UV</span>
         <Sun size={18} />
       </div>
-      <div className="relative text-2xl font-bold text-white drop-shadow">
-        {Math.round(uv)} <span className="text-base font-semibold text-white/90">· {info.level}</span>
+      <div className="relative text-2xl font-bold text-[var(--gm-fg)]">
+        {Math.round(uv)} <span className="text-base font-semibold text-[var(--gm-fg-muted)]">· {info.level}</span>
       </div>
-      <div className="relative text-sm text-white/90">{info.advice}</div>
+      <div className="relative text-sm text-[var(--gm-fg-muted)]">{info.advice}</div>
     </div>
   )
 }

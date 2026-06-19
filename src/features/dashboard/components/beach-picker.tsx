@@ -15,7 +15,7 @@ export function BeachPicker() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-1 rounded-full bg-white/25 px-4 py-2 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-white/35"
+        className="flex items-center gap-1 rounded-full bg-white/25 px-4 py-2 text-sm font-semibold text-[var(--gm-fg)] backdrop-blur-md transition hover:bg-white/35"
       >
         <Plus size={16} /> Añadir playa
       </button>
