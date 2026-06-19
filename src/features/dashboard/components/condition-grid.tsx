@@ -1,4 +1,4 @@
-import { Droplets, Thermometer } from 'lucide-react'
+import { Droplets, Smile, Sun, Thermometer } from 'lucide-react'
 import type {
   ConditionSnapshot,
   HourlyPoint,
@@ -33,15 +33,6 @@ export function ConditionGrid({
       <SkyCard snapshot={snapshot} hourly={hourly} />
 
       <TempCard
-        label="Sensación"
-        temp={snapshot.apparentTemp}
-        scale="air"
-        value={round(snapshot.apparentTemp, '°')}
-        sub={`Aire ${round(snapshot.airTemp, '°')}`}
-        icon={<Thermometer size={18} />}
-      />
-
-      <TempCard
         label="Temperatura"
         temp={snapshot.airTemp}
         scale="air"
@@ -49,6 +40,20 @@ export function ConditionGrid({
         sub="Aire"
         icon={<Thermometer size={18} />}
         maxTemp={snapshot.maxAirTemp}
+      />
+
+      <TempCard
+        label="Sensación"
+        temp={snapshot.apparentTemp}
+        scale="air"
+        value={round(snapshot.apparentTemp, '°')}
+        sub={`Aire ${round(snapshot.airTemp, '°')}`}
+        icon={
+          <span className="flex items-center gap-0.5">
+            <Smile size={15} />
+            <Sun size={13} />
+          </span>
+        }
       />
 
       <TempCard
